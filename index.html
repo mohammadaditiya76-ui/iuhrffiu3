@@ -3022,3 +3022,56 @@
     </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a1d289745d7a2f1',t:'MTc2MzY5NjM1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+  // Function untuk Memuat konfigurasi yang disimpan dari LocalStorage
+function loadSavedConfig() {
+    // KODE KUNCI: Mengambil string konfigurasi yang disimpan
+    const savedConfig = localStorage.getItem('citarasamaron_admin_config'); 
+    
+    // KODE KUNCI: Memeriksa apakah ada data yang disimpan
+    if (savedConfig) {
+        try {
+            const parsedConfig = JSON.parse(savedConfig);
+            
+            // Memanggil fungsi yang menerapkan data ke elemen HTML
+            // (onConfigChange adalah fungsi yang sudah ada di file Anda)
+            onConfigChange(parsedConfig); 
+            
+            // Menampilkan notifikasi bahwa data dimuat
+            showRestoreNotification(); 
+        } catch (e) {
+            console.error("Gagal memuat konfigurasi dari LocalStorage:", e);
+        }
+    }
+}
+
+// ... (Kode fungsi lain)
+
+// PASTIKAN FUNGSI INI DIPANGGIL SAAT HALAMAN SELESAI DIMUAT
+loadSavedConfig();
+// Function untuk Mengumpulkan dan Menyimpan konfigurasi ke LocalStorage
+function saveAdminChanges(newConfig) {
+    // ... (Banyak kode sebelumnya yang mengumpulkan data ke newConfig) ...
+
+    // KODE KUNCI: Menyimpan object konfigurasi ke LocalStorage
+    // Data diubah menjadi string JSON sebelum disimpan
+    localStorage.setItem('citarasamaron_admin_config', JSON.stringify(newConfig)); 
+
+    // Menerapkan perubahan ke halaman
+    onConfigChange(newConfig);
+
+    // Menampilkan pesan sukses
+    const successMsg = document.getElementById('save-success');
+    successMsg.textContent = '✅ Semua perubahan berhasil disimpan dan tidak akan hilang saat refresh!';
+    successMsg.classList.add('show');
+    
+    setTimeout(() => {
+        successMsg.classList.remove('show');
+    }, 4000);
+}
+
+// ... (Pastikan listener tombol Anda memanggil fungsi ini) ...
+document.getElementById('save-admin-btn').addEventListener('click', () => {
+    // Kumpulkan newConfig di sini (seperti yang dilakukan di file Anda)
+    // dan panggil saveAdminChanges(newConfig);
+    // (Berdasarkan file Anda, kode ini berada di sekitar baris 1190)
+});
