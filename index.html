@@ -180,7 +180,21 @@
         
         // --- VARIABEL GLOBAL DARI LINGKUNGAN CANVAS (WAJIB DIGUNAKAN) ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-smargon-app';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        
+        let firebaseConfig = {};
+        // Ambil string konfigurasi. Jika tidak ada, gunakan string kosong.
+        const rawConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+        
+        // Membungkus JSON.parse dalam try/catch untuk mencegah kegagalan jika string kosong/invalid
+        try {
+            if (rawConfig && rawConfig !== '""') {
+                 firebaseConfig = JSON.parse(rawConfig);
+            }
+        } catch (e) {
+            console.error("Gagal parse __firebase_config. Menggunakan objek kosong.", e);
+            // Biarkan firebaseConfig = {}
+        }
+        
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
         
         // Menggunakan array segmen path untuk konstruksi doc() yang lebih eksplisit
@@ -198,11 +212,13 @@
         let websiteData = {}; // Menyimpan data dari Firestore
 
         try {
+            // Gunakan firebaseConfig yang sudah diparsing dengan aman
             app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
         } catch (error) {
             console.error("Kesalahan inisialisasi Firebase:", error);
+            // Tampilkan pesan kegagalan yang sesuai
             document.getElementById('loading-screen').innerHTML = '<p class="text-red-500">Gagal memuat aplikasi. Cek konfigurasi Firebase.</p>';
         }
 
